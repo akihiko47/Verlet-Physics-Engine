@@ -1,0 +1,14 @@
+canvas {
+    background-color:#1d1b1d;
+    width: 70%;
+    height: auto;
+    margin: 20px;
+
+    border-radius: 15px;
+}
+
+main {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

@@ -4,7 +4,7 @@
   "description": "my first First experience using npm to create a soft-body simulation",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node index.js"
   },
   "repository": {
     "type": "git",
@@ -19,8 +19,5 @@
   "bugs": {
     "url": "https://github.com/akihiko47/Softbody-Simulation/issues"
   },
-  "homepage": "https://github.com/akihiko47/Softbody-Simulation#readme",
-  "dependencies": {
-    "toxiclibsjs": "^0.3.3"
-  }
+  "homepage": "https://github.com/akihiko47/Softbody-Simulation#readme"
 }
