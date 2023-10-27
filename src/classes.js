@@ -1,19 +1,15 @@
 class Particle {
-    constructor(x, y, ax, ay, radius, anchored) {
+    constructor(x, y, radius, color) {
         this.x_now = x;
         this.y_now = y;
         this.x_old = x;
         this.y_old = y;
         this.vx = 0;
         this.vy = 0;
-        this.ax = ax;
-        this.ay = ay;
+        this.ax = 0;
+        this.ay = 0;
         this.radius = radius;
-        this.anchored = anchored;
-        this.color = "rgb(" +
-            Math.abs(Math.sin(nowParticles)) * 255 + "," +
-            Math.abs(Math.cos(nowParticles)) * 255 + "," +
-            Math.abs(Math.sin(nowParticles)) * 255 + ")";
+        this.color = color;
     }
     
     update(dt) {
@@ -37,12 +33,13 @@ class Particle {
 }
 
 class Spring {
-    constructor(particle1, particle2, strength, damping) {
+    constructor(particle1, particle2, strength, damping, color) {
         this.p1 = particle1;
         this.p2 = particle2;
         this.length = Math.sqrt((this.p1.x_now - this.p2.x_now)**2 + (this.p1.y_now - this.p2.y_now)**2);
         this.strength = strength;
         this.damping = damping;
+        this.color = color;
     }
 
     applyStringForce() {

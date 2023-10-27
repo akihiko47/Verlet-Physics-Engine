@@ -1,4 +1,9 @@
-function draw_particles(content, particles) {
+function drawEntities(content, particles, springs, joints) {
+    drawParticles(content, particles);
+    drawSprings(content, springs);
+}
+
+function drawParticles(content, particles) {
     for (let particle of particles) {
         content.beginPath();
         content.arc(particle.x_now, particle.y_now, particle.radius-1, 0, 2 * Math.PI, false);
@@ -7,66 +12,67 @@ function draw_particles(content, particles) {
     }
 }
 
-function draw_springs(content, springs) {
+function drawSprings(content, springs) {
     for (let spring of springs) {
         content.beginPath();
         content.moveTo(spring.p1.x_now, spring.p1.y_now);
         content.lineTo(spring.p2.x_now, spring.p2.y_now);
         content.lineWidth = 5;
-        content.strokeStyle = "rgb(0, 255, 0)";
+        content.strokeStyle = spring.color;
         content.stroke();
     }
 }
 
-function apply_gravity(particles, G) {
+function applyGravity(particles, G) {
     for (let particle of particles) {
-        particle.accelerate(0, G);
+        particle.accelerate(0, G * 100);
 	}
 }
 
-function apply_springs(springs) {
+function update(particles, springs, joints, dt) {
+    applyConstraint(particles);
+    updatePositions(particles, dt);
+    handleBetweenCollision(particles);
+    applySprings(springs);
+    applyJoints(joints);
+}
+
+function applySprings(springs) {
     for (let spring of springs) {
         spring.applyStringForce();
     }
 }
 
-function apply_joints(joints) {
+function applyJoints(joints) {
     for (let joint of joints) {
         joint.applyJoint();
     }
 }
 
-function update_positions(particles, dt) {
+function updatePositions(particles, dt) {
     for (let particle of particles) {
         particle.update(dt);
     }
 }
 
-function apply_constraint(content, particles) {
-
-    content.fillStyle = wallsColor;
-    content.fillRect(0, 0, width, height);
-
-    content.fillStyle = grd;
-    content.fillRect(borderSize, borderSize, width - 2*borderSize, height - 2*borderSize);
-
+function applyConstraint(particles) {
     for (let particle of particles) {
-        if (particle.x_now + particle.radius > width - borderSize) {
-            particle.x_now = width - borderSize - particle.radius;
+        if (particle.x_now + particle.radius > width) {
+            particle.x_now = width - particle.radius;
         }
-        if (particle.x_now - particle.radius < borderSize) {
-            particle.x_now = particle.radius + borderSize;
+        if (particle.x_now - particle.radius < 0) {
+            particle.x_now = particle.radius;
         }
-        if (particle.y_now + particle.radius > height - borderSize) {
-            particle.y_now = height - particle.radius - borderSize;
+        if (particle.y_now + particle.radius > height) {
+            particle.y_now = height - particle.radius;
         }
-        if (particle.y_now - particle.radius < borderSize) {
-            particle.y_now = particle.radius + borderSize;
+        if (particle.y_now - particle.radius < 0) {
+            particle.y_now = particle.radius;
         }
     }
 }
 
-function handle_between_collision(particles) {
+function handleBetweenCollision(particles) {
     for (let particle1 of particles) {
         for (let particle2 of particles) {
             if (particle1 !== particle2) {
