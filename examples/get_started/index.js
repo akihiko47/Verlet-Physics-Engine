@@ -24,6 +24,7 @@ let secPassed = 0;  // time betweeen frames
 let backgroundColor = "rgb(22, 22, 22)";
 let particleColor = "rgb(200, 75, 49)";
 let springColor = "rgb(45, 66, 99)";
+let anchorColor = "rgb(236, 219, 186)"
 
 // MAIN FUNCTION
 function main() { 
@@ -77,7 +78,7 @@ function addRect() {
 function addRope() {
     // add anchor
     // particle => x, y, radius(default=0), color(default=white), anchored(default=false)
-    particles.push(new Particle(900, 500, 15, undefined, true))
+    particles.push(new Particle(900, 500, 15, anchorColor, true))
 
     // add 15 rope particles
     // particle => x, y, radius(default=0), color(default=white), anchored(default=false)

@@ -103,3 +103,45 @@ class Joint {
         this.p2.y_now -= 0.5 * delta * n_y;
     }
 }
+
+class Mouse {
+    constructor(canvas, x=0, y=0, pickRadius=50) {
+        this.canvas = canvas;
+        this.x = x;
+        this.y = y;
+        this.down = false;
+        this.pickRadius = pickRadius;
+        this.closestParticle;
+        this.canvas.addEventListener("mousemove", event => this.updatePosition(canvas, event));
+        this.canvas.addEventListener("mousedown", () => this.down = true);
+        this.canvas.addEventListener("mouseup", () => this.down = false);
+    }
+
+    updatePosition(canvas, event) {
+        let rect = canvas.getBoundingClientRect(); 
+        this.x = (event.clientX - rect.left) / (rect.right - rect.left) * canvas.width;
+        this.y = (event.clientY - rect.top) / (rect.bottom - rect.top) * canvas.height;
+    }
+
+    applyPickUp(particles) {
+        let minDist = Infinity;
+
+        if (this.down) {
+            if (this.closestParticle != undefined) {
+                if (!this.closestParticle.anchored) {
+                    this.closestParticle.x_now = this.x;
+                    this.closestParticle.y_now = this.y;
+                }
+            }
+        } else {
+            this.closestParticle = undefined;
+            for (let particle of particles) {
+                let dist = Math.sqrt((this.x-particle.x_now)**2 + (this.y - particle.y_now)**2)
+                if (dist <= this.pickRadius & dist < minDist) {
+                    minDist = dist;
+                    this.closestParticle = particle;
+                }
+            }
+        }
+    }
+}

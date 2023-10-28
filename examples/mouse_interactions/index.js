@@ -1,108 +1,72 @@
-var canvas = document.getElementById("canvas");
+var canvas = document.getElementById("canvas");  // get canvas
 
-let width = canvas.width;
-let height = canvas.height;
+let width = canvas.width;  // get canvas width
+let height = canvas.height;  // get canvas height
 
-let content = canvas.getContext('2d'); 
+let content = canvas.getContext('2d');  // get content of canvas
 
-let particles = [];
-let springs = [];
-let joints = [];
+let particles = [];  // main array of particles
+let springs = [];  // main array of springs
+let joints = [];  // main array of rigid joints
 
-let subSteps = 4;
+// update function iterations
+// more substeps => better accuracy
+// more substeps => poor performance
+let subSteps = 4; 
 
-let G = 10;
+let G = 10;  // gravitational force
 
-let msNow = 0;
-let msPrev = 0;
-let msPassed = 0;
-
-let mouseX = 0;
-let mouseY = 0;
-let mouseDown = false;
-
+let secNow = 0;  // variable for storing frame start time
+let secPrev = 0;  // variable for storing the end time of the previous frame
+let secPassed = 0;  // time betweeen frames
 
 // colors
-let wallsColor = "#282a36";
-let backgroundColor = "rgb(0, 0, 0)";
-let particleColor = "rgb(200, 0, 200)";
-let springColor = "rgb(200, 0, 200)";
+let backgroundColor = "rgb(34, 40, 49)";
+let particleColor = "rgb(240, 84, 84)";
+let springColor = "rgb(48, 71, 94)";
+
+// !====================!
+//      MOUSE PART
+// create mouse object
+// mouse position will be automaticly updated and stored in mouse.x and mouse.y
+// mouse => canvas object, spawn position x, spawn position y, pick up radius
+let mouse = new Mouse(canvas, 0, 0, 50);
 
 
-function getMousePosition(canvas, event) { 
-    let rect = canvas.getBoundingClientRect(); 
-    mouseX = (event.clientX - rect.left) / (rect.right - rect.left) * canvas.width;
-    mouseY = (event.clientY - rect.top) / (rect.bottom - rect.top) * canvas.height;
-} 
-
-canvas.addEventListener("mousemove", function(e) {getMousePosition(canvas, e)}); 
-
-canvas.addEventListener('mousedown', function() {
-    mouseDown = true;
-});
-
-canvas.addEventListener('mouseup', function() {
-    mouseDown = false;
-});
-
+// MAIN FUNCTION
 function main() { 
-    let msNow = window.performance.now()
+    secNow = window.performance.now()  // get start time of this frame
 
-    content.clearRect(0, 0, width, height);
+    content.clearRect(0, 0, width, height);  // clear canvas
 
-    content.fillStyle = backgroundColor;
-    content.fillRect(0, 0, width, height);
+    content.fillStyle = backgroundColor;  // change color to background color
+    content.fillRect(0, 0, width, height);  // draw background
 
+    // substeps loop
+    // you can perform several updates per frame for greater accuracy
+    // in this case, the frame time is divided by the number of sub-steps
     for (let i = 0; i < subSteps; i++) {
         applyGravity(particles, G);
-        update(particles, springs, joints, msPassed / subSteps);
+        update(particles, springs, joints, secPassed / subSteps);
 
-        if (mouseDown) {
-            particles[1].x_now = mouseX;
-            particles[1].y_now = mouseY;
-        }
+        // enable the ability to pick up particles with the mouse
+        // you need to pass a list of particles
+        mouse.applyPickUp(particles);
     }
 
-    drawEntities(content, particles, springs, joints);
+    drawEntities(content, particles, springs, joints); // draw particles, springs and joints on canvas
+    
+    secPassed = (secNow - secPrev) / 1000;  // get frame time and convers to seconds
+    secPrev = secNow;  // get end time of this frame
 
-    msPassed = (msNow - msPrev) / 1000;
-    msPrev = msNow;
-
-    requestAnimationFrame(main); 
+    requestAnimationFrame(main);  // continue main loop
 }
 
-
-particles.push(new Particle(500, 700, 15, particleColor));
-particles.push(new Particle(500, 500, 15, particleColor));
-particles.push(new Particle(700, 500, 15, particleColor));
-particles.push(new Particle(700, 700, 15, particleColor));
-
-springs.push(new Spring(particles[0], particles[1], 0.8, 0.2, springColor));
-springs.push(new Spring(particles[1], particles[2], 0.8, 0.2, springColor));
-springs.push(new Spring(particles[2], particles[3], 0.8, 0.2, springColor));
-springs.push(new Spring(particles[3], particles[0], 0.8, 0.2, springColor));
-springs.push(new Spring(particles[0], particles[2], 0.8, 0.2, springColor));
-springs.push(new Spring(particles[3], particles[1], 0.8, 0.2, springColor));
-
-for (let i = 0; i < 40; i++) {
-    particles.push(new Particle(715 + 30 * i , 715, 15, false));
+function spawnParticles() {
+    for (let i = 0; i < 50; i++) {
+        particles.push(new Particle(Math.random()*width, Math.random()*height, 20 + Math.random()*20, particleColor));
+    }
 }
 
-for (let i = 0; i < 40; i++) {
-    joints.push(new Joint(particles[i+3], particles[i+4]));
-}
-
-particles.push(new Particle(1000, 500, 30, particleColor));
-particles.push(new Particle(1300, 500, 30, particleColor));
-particles.push(new Particle(1300, 800, 30, particleColor));
-particles.push(new Particle(1000, 800, 30, particleColor));
-
-springs.push(new Spring(particles[44], particles[45], 0.8, 0.2, springColor));
-springs.push(new Spring(particles[45], particles[46], 0.8, 0.2, springColor));
-springs.push(new Spring(particles[46], particles[47], 0.8, 0.2, springColor));
-springs.push(new Spring(particles[47], particles[44], 0.8, 0.2, springColor));
-springs.push(new Spring(particles[44], particles[46], 0.8, 0.2, springColor));
-springs.push(new Spring(particles[45], particles[47], 0.8, 0.2, springColor));
-
-
+spawnParticles();
 main();
