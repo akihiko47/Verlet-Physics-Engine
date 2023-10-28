@@ -1,5 +1,7 @@
 class Particle {
-    constructor(x, y, radius, color) {
+    constructor(x, y, radius=0, color="#ffffff", anchored=false) {
+        this.x = x;
+        this.y = y;
         this.x_now = x;
         this.y_now = y;
         this.x_old = x;
@@ -10,6 +12,7 @@ class Particle {
         this.ay = 0;
         this.radius = radius;
         this.color = color;
+        this.anchored = anchored;
     }
     
     update(dt) {
@@ -26,6 +29,11 @@ class Particle {
         this.ay = 0;
     }
 
+    updateAnchor() {
+        this.x_now = this.x;
+        this.y_now = this.y;
+    }
+
     accelerate(acc_x, acc_y) {
         this.ax += acc_x;
         this.ay += acc_y;
@@ -33,13 +41,14 @@ class Particle {
 }
 
 class Spring {
-    constructor(particle1, particle2, strength, damping, color) {
+    constructor(particle1, particle2, strength, damping, width=0, color="#ffffff") {
         this.p1 = particle1;
         this.p2 = particle2;
         this.length = Math.sqrt((this.p1.x_now - this.p2.x_now)**2 + (this.p1.y_now - this.p2.y_now)**2);
         this.strength = strength;
         this.damping = damping;
         this.color = color;
+        this.width = width;
     }
 
     applyStringForce() {
@@ -69,10 +78,12 @@ class Spring {
 }
 
 class Joint {
-    constructor(particle1, particle2) {
+    constructor(particle1, particle2, width=0, color="#ffffff") {
         this.p1 = particle1;
         this.p2 = particle2;
         this.target_dist = Math.sqrt((this.p1.x_now - this.p2.x_now)**2 + (this.p1.y_now - this.p2.y_now)**2) + 1
+        this.width = width;
+        this.color = color;
     }
 
     applyJoint() {

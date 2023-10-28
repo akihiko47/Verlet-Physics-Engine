@@ -1,25 +1,43 @@
-function drawEntities(content, particles, springs, joints) {
-    drawParticles(content, particles);
+function drawEntities(content, particles=[], springs=[], joints=[]) {
+    drawJoints(content, joints);
     drawSprings(content, springs);
+    drawParticles(content, particles);
 }
 
 function drawParticles(content, particles) {
     for (let particle of particles) {
-        content.beginPath();
-        content.arc(particle.x_now, particle.y_now, particle.radius-1, 0, 2 * Math.PI, false);
-        content.fillStyle = particle.color;
-        content.fill();
+        if (particle.radius) {
+            content.beginPath();
+            content.arc(particle.x_now, particle.y_now, particle.radius-1, 0, 2 * Math.PI, false);
+            content.fillStyle = particle.color;
+            content.fill();
+        }
     }
 }
 
 function drawSprings(content, springs) {
     for (let spring of springs) {
-        content.beginPath();
-        content.moveTo(spring.p1.x_now, spring.p1.y_now);
-        content.lineTo(spring.p2.x_now, spring.p2.y_now);
-        content.lineWidth = 5;
-        content.strokeStyle = spring.color;
-        content.stroke();
+        if (spring.width) {
+            content.beginPath();
+            content.moveTo(spring.p1.x_now, spring.p1.y_now);
+            content.lineTo(spring.p2.x_now, spring.p2.y_now);
+            content.lineWidth = spring.width;
+            content.strokeStyle = spring.color;
+            content.stroke();
+        }
+    }
+}
+
+function drawJoints(content, joints) {
+    for (let joint of joints) {
+        if (joint.width) {
+            content.beginPath();
+            content.moveTo(joint.p1.x_now, joint.p1.y_now);
+            content.lineTo(joint.p2.x_now, joint.p2.y_now);
+            content.lineWidth = joint.width;
+            content.strokeStyle = joint.color;
+            content.stroke();
+        }
     }
 }
 
@@ -51,7 +69,11 @@ function applyJoints(joints) {
 
 function updatePositions(particles, dt) {
     for (let particle of particles) {
-        particle.update(dt);
+        if (!particle.anchored) {
+            particle.update(dt);
+        } else {
+            particle.updateAnchor();
+        }
     }
 }
 
