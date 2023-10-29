@@ -48,7 +48,6 @@ function applyGravity(particles, G) {
 }
 
 function update(particles, springs, joints, dt) {
-    applyConstraint(particles);
     updatePositions(particles, dt);
     handleBetweenCollision(particles);
     applySprings(springs);
@@ -77,7 +76,7 @@ function updatePositions(particles, dt) {
     }
 }
 
-function applyConstraint(particles) {
+function applyConstraint(particles, width, height) {
     for (let particle of particles) {
         if (particle.x_now + particle.radius > width) {
             particle.x_now = width - particle.radius;

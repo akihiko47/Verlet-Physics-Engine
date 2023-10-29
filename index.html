@@ -6,12 +6,62 @@
     <title>Select example</title>
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            background-color: #222831;
+            font-family: "roboto";
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        #title {
+            color: #EEEEEE;
+            text-align: center;
+            font-size: 2rem;
+            font-weight: 800;
+            margin: 40px;
+        }
+
+        main {
+            margin: 5vh;
+            background-color: #393E46;
+            height: 70vh;
+            border-radius: 10px;
+        }
+
+        .link {
+            background-color: #EEEEEE;
+            color: #222831;
+            display: block;
+            text-decoration: none;
+            text-align: center;
+            margin: 20px;
+            padding: 20px;
+            border-radius: 4px;
+            transition: all 0.2s ease-in-out;
+        }
+
+        .link:hover {
+            background-color: #CCCCCC;
+            border-radius: 15px;
+        }
+
+    </style>
 </head>
 
 <body>
-    <a href="examples/get_started/index.html" title="Get started">Get started</a>
-    <br>
-    <a href="examples/mouse_interactions/index.html" title="Mouse interactions">Mouse interactions (in progress...)</a>
+    <main>
+        <p id="title">EXAMPLES</p>
+        <a href="examples/get_started/index.html" class ="link" title="Get started">Get started</a>
+        <a href="examples/mouse_interactions/index.html" class ="link" title="Mouse interactions">Mouse interactions</a>
+    </main>
 </body>
 
 </html>
