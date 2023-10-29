@@ -96,7 +96,7 @@ function applyConstraint(particles, width, height) {
 function handleBetweenCollision(particles) {
     for (let particle1 of particles) {
         for (let particle2 of particles) {
-            if (particle1 !== particle2) {
+            if ((particle1 !== particle2) & (particle1.radius != 0 & particle2.radius != 0)) {
                 let col_axis_x = particle1.x_now - particle2.x_now;
                 let col_axis_y = particle1.y_now - particle2.y_now;
 
